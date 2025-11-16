@@ -8,11 +8,11 @@ class LearnedPositionalEmbedding(nnx.Module):
         self.vocab_size = vocab_size
         self.d_model = d_model
         self.embed = nnx.Embed(self.vocab_size, self.d_model, rngs=rngs)
-        self.drop_out = nnx.Dropout(rate=0.3)
+        self.drop_out = nnx.Dropout(rate=0.3, rngs=rngs)
 
     def __call__(self, x):
         position_ids = jnp.arange(x.shape[1])
-        position_ids = jnp.broadcast_to(position_ids, x.shape)
+        position_ids = jnp.broadcast_to(position_ids, (x.shape[0], x.shape[1]))
         pos_x = self.embed(position_ids)
         pos_embeddings = self.drop_out(x + pos_x)
 
@@ -27,6 +27,7 @@ class TransformerBlock(nnx.Module):
             num_heads=self.n_heads,
             in_features=self.d_model,
             qkv_features=self.d_model // 2,
+            decode=False,
             rngs=rngs,
         )
         self.ln1 = nnx.LayerNorm(num_features=self.d_model, rngs=rngs)
@@ -35,7 +36,7 @@ class TransformerBlock(nnx.Module):
             in_features=self.d_model, out_features=self.d_model * 4, rngs=rngs
         )
         self.mlp2 = nnx.Linear(
-            in_features=self.d_model * 4, out_features=self.d_model * 4, rngs=rngs
+            in_features=self.d_model * 4, out_features=self.d_model, rngs=rngs
         )
 
     def __call__(self, x):
@@ -43,13 +44,11 @@ class TransformerBlock(nnx.Module):
             x
         )  # check this again, whether, I will have to manually calculate hte q,k,v then pass it in as the input to this layer
         x = self.ln1(x + attn_out)
-
         ffn_out = self.mlp1(x)
         ffn_out = nnx.gelu(ffn_out)
         ffn_out = self.mlp2(ffn_out)
-        x = self.mlp2(x + attn_out)
-
-        return x
+        out_norm = self.ln2(ffn_out + x)
+        return out_norm
 
 
 class DiffusionLM(nnx.Module):
@@ -71,8 +70,7 @@ class DiffusionLM(nnx.Module):
         pos_emb = self.pos_emb(token_emb)
         t_emb = self.get_timestep_embedding(t)
         t_emb = t_emb[:, None, :]
-
-        h = pos_emb + t_emb
+        h = pos_emb + t_emb + token_emb
 
         for block in self.transformer_blocks:
             h = block(h)
@@ -92,12 +90,13 @@ class DiffusionLM(nnx.Module):
 
 if __name__ == "__main__":
     key = jax.random.key(0)
-    test_array = jax.random.randint(key, (8, 64, 256), 0, 127)
-    print(test_array)
+    test_array = jax.random.randint(key, (8, 64), 0, 127)
+    time_steps = jax.random.randint(key, (8,), 0, 10000)
+    print(test_array.shape)
 
     model = DiffusionLM(128, 256, 8, 6, 512, rngs=nnx.Rngs(0))
-    pred = model(test_array, 10)
-    print(pred)
+    pred = model(test_array, time_steps)
+    # print(pred)
 
     # dlm = DiffusionLM()
     # output = dlm(x)

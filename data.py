@@ -25,9 +25,9 @@ def create_dataloader(*, dataset, batch_size, seq_len, tokenizer):
             batch.append(tokens)
 
             if len(batch) == batch_size:
-                yield batch
+                yield jnp.array(batch)
 
         if batch:
-            yield batch
+            yield jnp.array(batch)
 
     return generator
