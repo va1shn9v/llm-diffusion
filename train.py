@@ -22,15 +22,16 @@ def train_one_batch(batch, noisy_batch, t, model, optimizer):
 
 def train(dataloader, model, optimizer, scheduler, rngs, key, epochs=10):
     print("Starting Training")
-    for epoch_idx, epoch in enumerate(range(epochs)):
+    for epoch in range(epochs):
         for batch_idx, batch in enumerate(dataloader()):
+            print(batch_idx)
             timesteps = jax.random.randint(key, batch.shape[0], 0, scheduler.T)
             noisy_batch = scheduler.noise_sample(batch, timesteps, key)
             loss = train_one_batch(batch, noisy_batch, timesteps, model, optimizer)
             if batch_idx % 10 == 0:
                 print(
                     "Loss at Epoch idx : {0} ,Batch idx : {1} : {2}".format(
-                        epoch_idx, batch_idx, loss
+                        epoch, batch_idx, loss
                     )
                 )
 
