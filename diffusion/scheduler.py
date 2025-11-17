@@ -1,5 +1,7 @@
 import jax
 import jax.numpy as jnp
+from chex._src.asserts_internal import TAssertFn, TChexAssertion, TDimMatcher
+from flax.core.meta import TAxisMetadata
 
 
 class NoiseScheduler:
@@ -18,3 +20,7 @@ class NoiseScheduler:
         mask = jax.random.bernoulli(key, mask_prob, batch.shape)
         batch = jnp.where(mask, self.mask_token, batch)
         return batch
+
+    def sample_step(self, model, batch, t):
+        logits = model(batch, t)
+        return jnp.argmax(logits, axis=-1)

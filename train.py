@@ -9,6 +9,7 @@ from data import CharTokenizer, create_dataloader
 from diffusion.scheduler import NoiseScheduler
 from loss import loss_func
 from model import DiffusionLM
+from utils import count_parameters
 
 
 @nnx.jit
@@ -44,6 +45,7 @@ if __name__ == "__main__":
     )
     scheduler = NoiseScheduler(vocab_size=128)
     model = DiffusionLM(128, 64, 4, 3, 128, rngs=nnx.Rngs(0))
+    print("Total parameters in the model : ", count_parameters(model))
     optimizer = nnx.Optimizer(model, optax.adam(1e-3), wrt=nnx.Param)
     key = jax.random.key(0)
     train(dataloader, model, optimizer, scheduler, rngs=nnx.Rngs(0), key=key)
