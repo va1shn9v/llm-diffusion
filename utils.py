@@ -29,7 +29,8 @@ def generate_text(model, prompt, length, tokenizer, scheduler):
         # print(preds)
         pred_tokens = jnp.argmax(preds, axis=-1)
         # print(pred_tokens.shape)
-        pred_text = tokenizer.decode(pred_tokens[0])
-        print("\r" + pred_text, end="", flush=True)
+        pred_text = tokenizer.decode(pred_tokens[0][text_tokens_len:])
+        gen_text = prompt + " " + pred_text
+        print("\r" + gen_text, end="", flush=True)
         time.sleep(0.5)
-        prompt_array.at[:, text_tokens_len].set(pred_tokens[:, text_tokens_len])
+        prompt_array.at[:, text_tokens_len:].set(pred_tokens[:, text_tokens_len:])
