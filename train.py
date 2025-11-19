@@ -54,7 +54,7 @@ def train(dataloader, model, optimizer, scheduler, checkpointer, rngs, key, epoc
                         f"Loss at Epoch idx : {epoch} ,Batch idx : {batch_idx} : {loss}"
                     )
                     _, state = nnx.split(model)
-                    checkpointer.save(ckpt_dir / "state", state)
+                    checkpointer.save(ckpt_dir / "state_{}".format(time.time()), state)
 
 
 if __name__ == "__main__":
