@@ -43,6 +43,6 @@ def create_dataloader(*, dataset, batch_size, seq_len, tokenizer):
                 batch = []
 
         if batch:
-            yield jnp.array(batch)
+            yield jnp.array(batch, dtype=jnp.float32)
 
     return generator

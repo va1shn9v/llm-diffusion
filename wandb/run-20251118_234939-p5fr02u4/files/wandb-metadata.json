@@ -1,0 +1,37 @@
+{
+  "os": "macOS-26.0.1-arm64-arm-64bit",
+  "python": "CPython 3.11.4",
+  "startedAt": "2025-11-19T07:49:39.818766Z",
+  "program": "/Users/vaishnavp/Desktop/projects/llm-diffusion/train.py",
+  "codePath": "train.py",
+  "codePathLocal": "train.py",
+  "git": {
+    "remote": "https://github.com/va1shn9v/llm-diffusion.git",
+    "commit": "8e46b60ccb13ddfb7b125fedbd6538605b32f621"
+  },
+  "email": "pvaishnav2718@gmail.com",
+  "root": "/Users/vaishnavp/Desktop/projects/llm-diffusion",
+  "host": "Vaishnavs-MacBook-Pro.local",
+  "executable": "/Users/vaishnavp/Desktop/projects/llm-diffusion/.venv/bin/python3",
+  "cpu_count": 8,
+  "cpu_count_logical": 8,
+  "disk": {
+    "/": {
+      "total": "245107195904",
+      "used": "236712882176"
+    }
+  },
+  "memory": {
+    "total": "8589934592"
+  },
+  "apple": {
+    "name": "Apple M2",
+    "ecpuCores": 4,
+    "pcpuCores": 4,
+    "gpuCores": 10,
+    "memoryGb": 8,
+    "swapTotalBytes": "8589934592",
+    "ramTotalBytes": "8589934592"
+  },
+  "writerId": "40zs4a1pfwvntcka55dio6bxyrzrc1z3"
+}
