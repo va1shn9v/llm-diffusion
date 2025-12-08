@@ -1,7 +1,5 @@
 import jax
 import jax.numpy as jnp
-from chex._src.asserts_internal import TAssertFn, TChexAssertion, TDimMatcher
-from flax.core.meta import TAxisMetadata
 
 
 class NoiseScheduler:

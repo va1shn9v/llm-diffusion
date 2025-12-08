@@ -4,10 +4,10 @@ from flax import nnx
 
 
 class LearnedPositionalEmbedding(nnx.Module):
-    def __init__(self, vocab_size, d_model, rngs):
-        self.vocab_size = vocab_size
+    def __init__(self, seq_len, d_model, rngs):
+        self.seq_len = seq_len
         self.d_model = d_model
-        self.embed = nnx.Embed(self.vocab_size, self.d_model, rngs=rngs)
+        self.embed = nnx.Embed(self.seq_len, self.d_model, rngs=rngs)
         self.drop_out = nnx.Dropout(rate=0.3, rngs=rngs)
 
     def __call__(self, x):
